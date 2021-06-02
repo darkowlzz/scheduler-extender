@@ -1,0 +1,73 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestAssert
+timeout: 240
+---
+# kuttl lacks proper support for partial arrays. Following is a workaround to
+# check if all the nodes are healthy based on
+# https://github.com/kudobuilder/kuttl/issues/76#issuecomment-632112138.
+# Since this test is based on scheduling on pod on nodes, ensuring that all the
+# nodes are healthy is a hard requirement.
+apiVersion: v1
+kind: Node
+metadata:
+  name: app-1-cluster-control-plane
+status:
+  conditions:
+  - reason: KubeletHasSufficientMemory
+  - reason: KubeletHasNoDiskPressure
+  - reason: KubeletHasSufficientPID
+  - reason: KubeletReady
+    status: "True"
+    type: Ready
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: app-1-cluster-worker
+status:
+  conditions:
+  - reason: KubeletHasSufficientMemory
+  - reason: KubeletHasNoDiskPressure
+  - reason: KubeletHasSufficientPID
+  - reason: KubeletReady
+    status: "True"
+    type: Ready
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: app-1-cluster-worker2
+status:
+  conditions:
+  - reason: KubeletHasSufficientMemory
+  - reason: KubeletHasNoDiskPressure
+  - reason: KubeletHasSufficientPID
+  - reason: KubeletReady
+    status: "True"
+    type: Ready
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: app-1-cluster-worker3
+status:
+  conditions:
+  - reason: KubeletHasSufficientMemory
+  - reason: KubeletHasNoDiskPressure
+  - reason: KubeletHasSufficientPID
+  - reason: KubeletReady
+    status: "True"
+    type: Ready
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: app-1-cluster-worker4
+status:
+  conditions:
+  - reason: KubeletHasSufficientMemory
+  - reason: KubeletHasNoDiskPressure
+  - reason: KubeletHasSufficientPID
+  - reason: KubeletReady
+    status: "True"
+    type: Ready

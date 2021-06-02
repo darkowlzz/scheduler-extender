@@ -1,0 +1,6 @@
+domain: my.domain
+layout:
+- go.kubebuilder.io/v3
+projectName: scheduler-extender
+repo: github.com/darkowlzz/scheduler-extender
+version: "3"

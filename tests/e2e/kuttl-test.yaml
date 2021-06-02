@@ -1,0 +1,12 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestSuite
+testDirs:
+- ./tests/e2e/
+kindConfig: tests/e2e/kind-config.yaml
+namespace: default
+startKIND: true
+kindContext: app-1-cluster
+kindNodeCache: true
+kindContainers:
+  - darkowlzz/demo-scheduler:test
+timeout: 60
