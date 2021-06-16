@@ -1,28 +1,23 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: demo-scheduler-policy
+  name: demo-scheduler-config
 data:
-  policy.cfg: |2
-        {
-          "kind" : "Policy",
-          "apiVersion" : "v1",
-          "predicates" : [
-            {"name" : "PodFitsHostPorts"},
-            {"name" : "PodFitsResources"},
-            {"name" : "NoDiskConflict"},
-            {"name" : "MatchNodeSelector"},
-            {"name" : "HostName"}
-          ],
-          "extenders" : [{
-            "urlPrefix": "https://webhook-service:8888/",
-            "filterVerb": "filter",
-            "prioritizeVerb": "prioritize",
-            "weight": 1,
-            "enableHttps": true,
-            "nodeCacheCapable": false
-          }]
-        }
+  config.yaml: |-
+    apiVersion: kubescheduler.config.k8s.io/v1beta1
+    kind: KubeSchedulerConfiguration
+    profiles:
+      - schedulerName: demo-scheduler
+    extenders:
+      - urlPrefix: "https://webhook-service:8888/"
+        filterVerb: filter
+        prioritizeVerb: prioritize
+        weight: 1
+        enableHTTPS: true
+        nodeCacheCapable: false
+    leaderElection:
+      leaderElect: true
+      resourceNamespace: default
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -63,15 +58,18 @@ spec:
       containers:
       - args:
         - kube-scheduler
-        - --leader-elect=false
-        - --scheduler-name=demo-scheduler
-        - --policy-configmap=demo-scheduler-policy
-        - --policy-configmap-namespace=default
-        - --lock-object-name=demo-scheduler
+        - --config=/scheduler/config.yaml
         - -v=4
         image: k8s.gcr.io/kube-scheduler:v1.20.5
         imagePullPolicy: IfNotPresent
         name: scheduler
+        volumeMounts:
+        - name: config
+          mountPath: /scheduler
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       serviceAccountName: demo-scheduler-sa
+      volumes:
+        - name: config
+          configMap:
+            name: demo-scheduler-config

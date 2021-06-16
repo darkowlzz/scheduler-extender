@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: demo-scheduler-policy
+  name: demo-scheduler-config
 ---
 apiVersion: v1
 kind: ServiceAccount
